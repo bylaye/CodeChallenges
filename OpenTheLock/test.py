@@ -1,4 +1,4 @@
-from open_lock import OpenLock
+from open_lock import OpenLock, DEFAULT_COUNT
 
 list_deadends = [
     ["0201","0101","0102","1212","2002"],
@@ -8,7 +8,7 @@ list_deadends = [
 
 list_target = ["0202", "0009", "8888"]
 
-list_output = [6, 1, -1]
+list_output = [6, 1, DEFAULT_COUNT]
 
 n = len(list_deadends)
 
@@ -20,8 +20,10 @@ for i in range(n):
     op = OpenLock(deadends=deadends, target=target)
 
     try:
-        result = op.result()
-        assert result == output
-        print(f'SUCCESS case {i+1}: target = {target}, output = {output}')
+        level, paths = op.result()
+        assert level == output
+        print(f'Case {i+1}: Target = {target} SUCCESS')
+        print(f'Total Minimal Moves = {output} \nPaths = {paths}')
+        print('****\t****\t****')
     except AssertionError:
-        print(f'FAILED case {i+1}: target = {target}, output = {result}, except = {output}')
+        print(f'FAILED case {i+1}: target = {target}, output = {level}, except = {output}')
