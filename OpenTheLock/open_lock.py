@@ -1,11 +1,15 @@
 from typing import *
 
+DEFAULT_COUNT = -1
+DEFAULT_PATH = []
+DEFAULT_FIRST = "0000"
+
 class OpenLock:
     """
     Class to solve the Open Lock Problem in a numeric wheel game.
     """
 
-    def __init__(self, deadends:List[str], target: str, first="0000"):
+    def __init__(self, deadends:List[str], target: str, first=DEFAULT_FIRST):
         """
         Initializes an instance of the OpenLock class.
 
@@ -16,8 +20,6 @@ class OpenLock:
         self.deadends = set(deadends)
         self.target = target
         self.first = first
-        self.count = -1
-        self.paths = []
 
     
     def neighbors(self, state: str) -> List[str]:
@@ -55,42 +57,41 @@ class OpenLock:
         return out
     
 
-    def bfs(self):
+    def _bfs(self):
         """
         Breadth-First Search (BFS) algorithm to find the minimum number of moves required
         to reach the target state of the lock from the initial state.
+
+        Returns:
+            level (int): Minimum number of moves if not result return DEFAULT_COUNT 
+            paths (List[str]): list of strings representing path if not path return DEFAULT_PATH
         """
         queue = [(self.first, 0)]
         visited = {self.first: self.first}
 
         while queue:
             lock, level = queue.pop(0)
+            
             if lock == self.target:
                 self.count = level
-                self.paths = self.wheels(visited=visited)
-                break
+                step = self.target
+                paths = [step]
+                
+                while step != self.first:
+                    paths.insert(0, visited[step])
+                    step = visited[step]
+                return level, paths
+            
             neighbors_locks = self.neighbors(lock)
-
             for code  in neighbors_locks:
                 if code not in visited:
                     visited[code] = lock
                     queue.append((code, level+1))
-
-
-    def wheels(self, visited:{str: str}) -> List[str]: # type: ignore
-        out = []
-        if self.count != -1:
-            code = self.target
-            out.append(code)
-            
-            while code != self.first:
-                out.insert(0, visited[code])
-                code = visited[code]
-
-        return out
+        
+        return DEFAULT_COUNT, DEFAULT_PATH
 
 
     def result(self):
-        self.bfs()
-        print(self.paths)
-        return self.count
+        
+        level, paths = self._bfs()
+        return level, paths
