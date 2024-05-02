@@ -1,5 +1,4 @@
 from typing import *
-from collections import defaultdict
 
 class OpenLock:
     """
