@@ -20,7 +20,8 @@ for i in range(n):
     op = OpenLock(deadends=deadends, target=target)
 
     try:
-        level, paths = op.result()
+        level = op.get_level()
+        paths = op.get_paths()
         assert level == output
         print(f'Case {i+1}: Target = {target} SUCCESS')
         print(f'Total Minimal Moves = {output} \nPaths = {paths}')
