@@ -20,6 +20,27 @@ class OpenLock:
         self.deadends = set(deadends)
         self.target = target
         self.first = first
+        self.level, self.paths = self._bfs()
+
+
+    def get_level(self):
+        return self.level
+    
+    
+    def get_paths(self):
+        return self.paths
+    
+    
+    def get_deadends(self):
+        return self.deadends
+    
+    
+    def get_target(self):
+        return self.target
+    
+
+    def get_first(self):
+        return self.first
 
     
     def neighbors(self, state: str) -> List[str]:
@@ -89,9 +110,3 @@ class OpenLock:
                     queue.append((code, level+1))
         
         return DEFAULT_COUNT, DEFAULT_PATH
-
-
-    def result(self):
-        
-        level, paths = self._bfs()
-        return level, paths
